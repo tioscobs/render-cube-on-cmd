@@ -18,6 +18,27 @@ void matrix_multiply(auto matrix1, auto matrix2, auto matrix_result, int a_rows,
          }
    }
 }
+ 
+// TESTING: NEED TO FIX NEGATIVE Y
+void draw_line(auto point1, auto point2, auto console){
+   float distance = sqrt(pow(point1[0] - point2[0], 2) + pow(point1[1] - point2[1], 2));
+   float co = (point1[1] - point2[1]), ca = (point1[0] - point2[0]);
+   float tang = co/ca;
+   //int midX = (point1[0] + point2[0])/2, midY = (point1[1] + point2[1])/2;
+   int X, Y;
+   for(int i = 0; i < floor(distance); i++){
+      X = point1[0];
+      Y = point1[1];
+
+      X = (ca < 0) ? X + i : X - i;
+      
+      Y = (co < 0) ? Y + X*tang : Y - X*tang;
+
+      console.setpos(50 + X, 5 + Y);
+      cout << "#";
+      //cout << X << endl << Y << endl << endl;
+   }
+}
 
 int main(){
    console_out_context context_out;
@@ -45,7 +66,19 @@ int main(){
    while (true){
       system("cls");
 
-      for(auto dot : cube_dots){
+      int dots[2][2] = {
+         {0, -5},
+         {5, 5}
+      };
+      
+      for(auto dot: dots){
+         console.setpos(50 + dot[0], 5 + dot[1]);
+         cout << "&";
+      }
+
+      draw_line(dots[0], dots[1], console);
+
+      /*for(auto dot : cube_dots){
          int rot_dot[3] = {0, 0, 0};
          int rot2_dot[3] = {0, 0, 0};
          int proj_dot[3] = {0, 0, 0};
@@ -78,7 +111,7 @@ int main(){
          cout << "#";
 
          angle += 0.05;
-      }
+      }*/
       Sleep(100);
    }
    return 0;
