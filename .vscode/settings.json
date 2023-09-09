@@ -23,7 +23,8 @@
         "system_error": "cpp",
         "cmath": "cpp",
         "bitset": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "vector": "cpp"
     },
     "cmake.configureOnOpen": false
 }

@@ -19,24 +19,48 @@ void matrix_multiply(auto matrix1, auto matrix2, auto matrix_result, int a_rows,
    }
 }
  
-// TESTING: NEED TO FIX NEGATIVE Y
+// NOTE: The quadrants are created based on the first point vector2. So, consider point1 X and Y the middle.
+//  ______________________________
+// |              |              |
+// |   X2-, Y2-   |   X2+, Y2-   |
+// |              |              |
+// |-----------(X, Y)------------|
+// |              |              |
+// |   X2-, Y2+   |   X2+, Y2+   |              
+// |______________|______________|
+
+// TESTING: NEED TO FIX ALL QUADRANTS ( :C )
 void draw_line(auto point1, auto point2, auto console){
    float distance = sqrt(pow(point1[0] - point2[0], 2) + pow(point1[1] - point2[1], 2));
-   float co = (point1[1] - point2[1]), ca = (point1[0] - point2[0]);
+   float co = abs(point1[0] - point2[0]), ca = abs(point1[1] - point2[1]);
    float tang = co/ca;
-   //int midX = (point1[0] + point2[0])/2, midY = (point1[1] + point2[1])/2;
-   int X, Y;
-   for(int i = 0; i < floor(distance); i++){
-      X = point1[0];
-      Y = point1[1];
+   int X, Y, fY;
+   for(int i = 0; i < round(distance); i++){
+      X = point1[0], Y = point1[1];
 
-      X = (ca < 0) ? X + i : X - i;
+      if(point2[0] != point1[0]){
+         X = ((point1[1] - point2[1]) < 0) ? X + i : X - i;
+
+         if((point2[0] < point1[0] && point2[1] < point1[1])){ // X2 < 0 && Y2 < 0
+            fY = point1[1] - ca;
+            Y = fY + ((X - point2[0])/tang);
+         }else if((point2[0] > point1[0] && point2[1] > point1[1])){ // X2 > 0 && Y2 > 0
+            fY = point1[1] + ca;
+            Y = fY + ((X - point2[0])/tang);
+         }else{ // Using to test quadrants (X2 > 0 && Y2 < 0) and (X2 < 0 && Y2 > 0)
+            Y = fY - ((X - point2[0])/tang);
+         }
+      }else{ // X1 == X2
+         if(point1[1] < point2[1])
+            Y += i;
+         else
+            Y -= i;
+      }
       
-      Y = (co < 0) ? Y + X*tang : Y - X*tang;
 
       console.setpos(50 + X, 5 + Y);
       cout << "#";
-      //cout << X << endl << Y << endl << endl;
+      //cout << X << " " << Y << endl << endl;
    }
 }
 
@@ -67,7 +91,7 @@ int main(){
       system("cls");
 
       int dots[2][2] = {
-         {0, -5},
+         {0, 0},
          {5, 5}
       };
       
@@ -78,7 +102,10 @@ int main(){
 
       draw_line(dots[0], dots[1], console);
 
-      /*for(auto dot : cube_dots){
+      /*
+      int i = 0;
+      int dots[4][2] = {};
+      for(auto dot : cube_dots){
          int rot_dot[3] = {0, 0, 0};
          int rot2_dot[3] = {0, 0, 0};
          int proj_dot[3] = {0, 0, 0};
@@ -108,11 +135,15 @@ int main(){
 
          //cout << proj_dot[0] << endl << proj_dot[1] << endl << endl;
          console.setpos(50 + proj_dot[0], 15 + proj_dot[1]);
-         cout << "#";
+         cout << "&";
 
          angle += 0.05;
+         dots[i][0] = proj_dot[0], dots[i][1] = proj_dot[1];
+         i++;
       }*/
-      Sleep(100);
+
+
+      Sleep(500);
    }
    return 0;
 }
