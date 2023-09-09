@@ -38,7 +38,7 @@ void draw_line(auto point1, auto point2, auto console){
    for(int i = 0; i < round(distance); i++){
       X = point1[0], Y = point1[1];
 
-      if(point2[0] != point1[0]){
+      if(point2[0] != point1[0] && point2[1] != point1[1]){
          X = ((point1[1] - point2[1]) < 0) ? X + i : X - i;
 
          if((point2[0] < point1[0] && point2[1] < point1[1])){ // X2 < 0 && Y2 < 0
@@ -50,15 +50,15 @@ void draw_line(auto point1, auto point2, auto console){
          }else{ // Using to test quadrants (X2 > 0 && Y2 < 0) and (X2 < 0 && Y2 > 0)
             Y = fY - ((X - point2[0])/tang);
          }
-      }else{ // X1 == X2
-         if(point1[1] < point2[1])
-            Y += i;
-         else
-            Y -= i;
+      }else if(point2[0] == point1[0]){ // X1 == X2
+         Y = (point1[1] < point2[1]) ? Y += i : Y -= i;
+
+      }else if(point2[1] == point1[1]){ // Y1 == Y2
+         X = (point1[0] < point2[0]) ? X + i : X - i;
       }
       
 
-      console.setpos(50 + X, 5 + Y);
+      console.setpos(50 + X, 15 + Y);
       cout << "#";
       //cout << X << " " << Y << endl << endl;
    }
@@ -90,21 +90,26 @@ int main(){
    while (true){
       system("cls");
 
-      int dots[2][2] = {
-         {0, 0},
-         {5, 5}
+      /*int dots[4][2] = {
+         {-5, 5},
+         {5, 5},
+         {5, -5},
+         {-5, -5}
       };
       
       for(auto dot: dots){
-         console.setpos(50 + dot[0], 5 + dot[1]);
+         console.setpos(50 + dot[0], 15 + dot[1]);
          cout << "&";
       }
 
       draw_line(dots[0], dots[1], console);
+      draw_line(dots[0], dots[3], console);
+      draw_line(dots[2], dots[1], console);
+      draw_line(dots[2], dots[3], console);*/
 
-      /*
+      
       int i = 0;
-      int dots[4][2] = {};
+      int dots[8][2] = {};
       for(auto dot : cube_dots){
          int rot_dot[3] = {0, 0, 0};
          int rot2_dot[3] = {0, 0, 0};
@@ -140,10 +145,19 @@ int main(){
          angle += 0.05;
          dots[i][0] = proj_dot[0], dots[i][1] = proj_dot[1];
          i++;
-      }*/
+      }
 
+      draw_line(dots[0], dots[1], console);
+      draw_line(dots[0], dots[3], console);
+      draw_line(dots[2], dots[1], console);
+      draw_line(dots[2], dots[3], console);
 
-      Sleep(500);
+      draw_line(dots[4], dots[5], console);
+      draw_line(dots[4], dots[7], console);
+      draw_line(dots[6], dots[5], console);
+      draw_line(dots[6], dots[7], console);
+
+      Sleep(2000);
    }
    return 0;
 }
